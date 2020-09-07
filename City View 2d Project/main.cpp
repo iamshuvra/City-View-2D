@@ -44,7 +44,7 @@ double train = 0;
 double car1 = 0;
 double car2 = 0;
 double fly = 0;
-double ship = -13;    ////////////////////////////
+double ship = -13;  
 double ship2 = 0;
 double rain = 0;
 
