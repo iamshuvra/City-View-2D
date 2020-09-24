@@ -9,6 +9,13 @@
 #define PI 3.14159265
 #define CTRL_COUNT 100
 
+bool nightLight;
+int firstBuildingWindowColor[3]={0,0,0};
+int secondBuildingWindowColor[3]={0,0,0};
+int thirdBuildingWindowColor[3]={0,0,0};
+int forthBuildingWindowColor[3]={0,0,0};
+//int lightColor={0,0,0};
+void draw_cylinder(GLfloat radius, GLfloat height, GLubyte R, GLubyte G, GLubyte B);
 int ctrlPointsCount;
 int ctrlPointsX[CTRL_COUNT], ctrlPointsY[CTRL_COUNT];
 int X1[3]= {20,25,20}, Y1[3]= {5,24,38};
@@ -19,79 +26,112 @@ int X5[3]= {18,25,32}, Y5[3]= {45,60,45};
 double var = -6;
 double rainX = -6;
 double rainY;
-//
- int ib;
-GLfloat twicePib = 2.0f * PI;
-   int triangleAmountb = 20;
-//
-bool Rain = false;
-bool night = false;
-
-//colors  variables
-double sky[3] = {19,190,242};
-double cloud[3] = {255,255,255};
-double sun[3] = {219,230,21};
+bool VelocityUp=false;
+bool freeze=false;
+double SpeedUp;
 double tree[3] = {34, 139, 34};
-double bush[3] = {127,162,12};
-double soil[3] = {199,192,141};
-double cowFood[3] = {235,222,164};
-double water[3] = {152,222,245};
-double building3[3] = {102,102,102};
-double building2[3] = {217,217,50};
-double building1Box2[3] = {237,237,187};
-double building1Box3[3] = {30,186,79};
+
+void drawCredle(){
+    //1st pillar
+    glColor3ub(36, 96, 167);
+    glBegin(GL_QUADS);
+    glVertex3f(4, 0.82, 0.0);
+    glVertex3f(4.1, 0.82, 0.0);
+    glVertex3f(4.1, 0.32, 0.0);
+    glVertex3f(4, 0.32, 0.0);
+    glEnd();
+
+    //2nd pillar
+    glColor3ub(36, 96, 167);
+    glBegin(GL_QUADS);
+    glVertex3f(4.9, 0.82, 0.0);
+    glVertex3f(5, 0.82, 0.0);
+    glVertex3f(5, 0.32, 0.0);
+    glVertex3f(4.9, 0.32, 0.0);
+    glEnd();
+
+    //upper square
+    glColor3ub(133, 179, 209);
+    glBegin(GL_QUADS);
+    glVertex3f(3.8, 0.8, 0.0);
+    glVertex3f(5.2, 0.8, 0.0);
+    glVertex3f(5.2, 0.7, 0.0);
+    glVertex3f(3.8, 0.7, 0.0);
+    glEnd();
+
+    //left square 1
+    glColor3ub(217, 180, 143);
+    glBegin(GL_QUADS);
+    glVertex3f(4.2, 0.8, 0.0);
+    glVertex3f(4.23, 0.8, 0.0);
+    glVertex3f(4.23, 0.4, 0.0);
+    glVertex3f(4.2, 0.4, 0.0);
+    glEnd();
+
+    //left square 2
+    glColor3ub(217, 180, 143);
+    glBegin(GL_QUADS);
+    glVertex3f(4.35, 0.8, 0.0);
+    glVertex3f(4.38, 0.8, 0.0);
+    glVertex3f(4.38, 0.6, 0.0);
+    glVertex3f(4.35, 0.6, 0.0);
+    glEnd();
+
+    //right square 1
+    glColor3ub(238, 178, 56);
+    glBegin(GL_QUADS);
+    glVertex3f(4.77, 0.8, 0.0);
+    glVertex3f(4.8, 0.8, 0.0);
+    glVertex3f(4.8, 0.4, 0.0);
+    glVertex3f(4.77, 0.4, 0.0);
+    glEnd();
+
+    //right square 2
+
+    glColor3ub(238, 178, 56);
+    glBegin(GL_QUADS);
+    glVertex3f(4.65, 0.8, 0.0);
+    glVertex3f(4.68, 0.8, 0.0);
+    glVertex3f(4.68, 0.6, 0.0);
+    glVertex3f(4.65, 0.6, 0.0);
+    glEnd();
+
+    //middle polygon
+    glColor3ub(110, 76, 30);
+    glBegin(GL_POLYGON);
+    glVertex3f(4.35, 0.6, 0.0); //left 1
+    glVertex3f(4.65, 0.6, 0.0);
+    glVertex3f(4.8, 0.4, 0.0);
+    glVertex3f(4.2, 0.4, 0.0);
+
+    glEnd();
 
 
-using namespace std;
-
-double train = 0;
-double car1 = 0;
-double car2 = 0;
-double car3=0;
-double car4=0;
-double fly = 0;
-double ship = -13;
-double ship2 = 0;
-double rain = 0;
-
-GLuint LoadTexture(const char * filename)
+}
+void drawTree()
 {
-    GLuint texture;
-    int width, height;
-    unsigned char * data;
-    FILE * file;
-    file = fopen(filename, "Rb");
-    if (file == NULL)
-        return 0;
-    width = 1024;
-    height = 512;
-    data = (unsigned char *)malloc(width * height * 3);
+    //Tree
+    glColor3ub(tree[0], tree[1], tree[2]);
 
-    fread(data, width * height * 3, 1, file);
-    fclose(file);
+    glPushMatrix();
+    glutSolidSphere(0.25,40,40);
+    glPopMatrix();
 
-    for (int i = 0; i < width * height; ++i)
-    {
-        int index = i * 3;
-        unsigned char B, R;
-        B = data[index];
-        R = data[index + 2];
-        data[index] = R;
-        data[index + 2] = B;
-    }
+    glPushMatrix();
+    glTranslatef(0.15,-0.15,0);
+    glutSolidSphere(0.25,40,40);
+    glPopMatrix();
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glPushMatrix();
+    glTranslatef(-0.15,-0.15,0);
+    glutSolidSphere(0.25,40,40);
+    glPopMatrix();
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-    free(data);
-
-    return texture;
+    glPushMatrix();
+    glTranslatef(0,-0.3,0);
+    glRotatef(90,1,0,0);
+    draw_cylinder(0.04,0.7,137, 94, 41);
+    glPopMatrix();
 }
 
 void draw_cylinder(GLfloat radius, GLfloat height, GLubyte R, GLubyte G, GLubyte B)
@@ -132,6 +172,469 @@ void draw_cylinder(GLfloat radius, GLfloat height, GLubyte R, GLubyte G, GLubyte
     glEnd();
 }
 
+void nightLightFun(){
+glBegin(GL_TRIANGLES);
+            glColor3ub(255, 255, 0);
+            glVertex2f(-2.9f,-0.6f);
+            glVertex2f(-2.7f,-0.6f);
+            glVertex2f(-2.8f,-0.2f);
+            glEnd();
+
+            glBegin(GL_TRIANGLES);
+            glColor3ub(255, 255, 0);
+            glVertex2f(-0.9f,-0.6f);
+            glVertex2f(-0.7f,-0.6f);
+            glVertex2f(-0.8f,-0.2f);
+            glEnd();
+
+            glBegin(GL_TRIANGLES);
+            glColor3ub(255, 255, 0);
+            glVertex2f(0.9f,-0.6f);
+            glVertex2f(0.7f,-0.6f);
+            glVertex2f(0.8f,-0.2f);
+            glEnd();
+
+            glBegin(GL_TRIANGLES);
+            glColor3ub(255, 255, 0);
+            glVertex2f(2.9f,-0.6f);
+            glVertex2f(2.7f,-0.6f);
+            glVertex2f(2.8f,-0.2f);
+            glEnd();
+    }
+
+void drawLight(){
+    ///light 1
+
+    glColor3ub(214, 214, 194);
+    glBegin(GL_QUADS);
+    glVertex2f(-3.0f,-0.5f);
+    glVertex2f(-3.1f,-0.5f);
+    glVertex2f(-3.1f,0.0f);
+    glVertex2f(-3.0f,0.0f);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(-3.0f,-0.1f);
+    glVertex2f(-2.8f,-0.1f);
+    glVertex2f(-2.8f,-0.0f);
+    glVertex2f(-3.0f,-0.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-2.9f,-0.2f);
+    glVertex2f(-2.7f,-0.2f);
+    glVertex2f(-2.8f,-0.1f);
+    glEnd();
+
+    ///bulb1
+    /*
+    glBegin(GL_TRIANGLES);
+    glColor3ub(255, 255, 0);
+    glVertex2f(-2.9f,-0.6f);
+    glVertex2f(-2.7f,-0.6f);
+    glVertex2f(-2.8f,-0.2f);
+    glEnd(); */
+
+
+
+
+	///light 2
+
+	glColor3ub(214, 214, 194);
+    glBegin(GL_QUADS);
+    glVertex2f(-1.0f,-0.5f);
+    glVertex2f(-1.1f,-0.5f);
+    glVertex2f(-1.1f,-0.0f);
+    glVertex2f(-1.0f,-0.0f);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(-1.0f,-0.1f);
+    glVertex2f(-0.8f,-0.1f);
+    glVertex2f(-0.8f,-0.0f);
+    glVertex2f(-1.0f,-0.0f);
+    glEnd();
+
+
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-0.9f,-0.2f);
+    glVertex2f(-0.7f,-0.2f);
+    glVertex2f(-0.8f,-0.1f);
+    glEnd();
+
+    ///bulb2
+    /*
+    glBegin(GL_TRIANGLES);
+    glColor3ub(255, 255, 0);
+    glVertex2f(-0.9f,-0.6f);
+    glVertex2f(-0.7f,-0.6f);
+    glVertex2f(-0.8f,-0.2f);
+    glEnd(); */
+
+
+	///light 3
+
+	glColor3ub(214, 214, 194);
+    glBegin(GL_QUADS);
+    glVertex2f(1.0f,-0.5f);
+    glVertex2f(1.1f,-0.5f);
+    glVertex2f(1.1f,-0.0f);
+    glVertex2f(1.0f,-0.0f);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(1.0f,-0.1f);
+    glVertex2f(0.8f,-0.1f);
+    glVertex2f(0.8f,-0.0f);
+    glVertex2f(1.0f,-0.0f);
+    glEnd();
+
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(0.9f,-0.2f);
+    glVertex2f(0.7f,-0.2f);
+    glVertex2f(0.8f,-0.1f);
+    glEnd();
+
+
+    ///bulb3
+    /*
+    glBegin(GL_TRIANGLES);
+    glColor3ub(255, 255, 0);
+    glVertex2f(0.9f,-0.6f);
+    glVertex2f(0.7f,-0.6f);
+    glVertex2f(0.8f,-0.2f);
+    glEnd(); */
+
+	///light 4
+    glColor3ub(214, 214, 194);
+    glBegin(GL_QUADS);
+    glVertex2f(3.0f,-0.5f);
+    glVertex2f(3.1f,-0.5f);
+    glVertex2f(3.1f,-0.0f);
+    glVertex2f(3.0f,-0.0f);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(3.0f,-0.1f);
+    glVertex2f(2.8f,-0.1f);
+    glVertex2f(2.8f,-0.0f);
+    glVertex2f(3.0f,-0.0f);
+    glEnd();
+
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(2.9f,-0.2f);
+    glVertex2f(2.7f,-0.2f);
+    glVertex2f(2.8f,-0.1f);
+    glEnd();
+
+    ///bulb4
+    /*
+    glBegin(GL_TRIANGLES);
+    glColor3ub(255, 255, 0);
+    glVertex2f(2.9f,-0.6f);
+    glVertex2f(2.7f,-0.6f);
+    glVertex2f(2.8f,-0.2f);
+    glEnd(); */
+
+
+}
+ int ib;
+GLfloat twicePib = 2.0f * PI;
+   int triangleAmountb = 20;
+//
+bool Rain = false;
+bool night = false;
+
+//colors  variables
+double sky[3] = {19,190,242};
+double cloud[3] = {255,255,255};
+double sun[3] = {219,230,21};
+double bush[3] = {127,162,12};
+double soil[3] = {199,192,141};
+double cowFood[3] = {235,222,164};
+double water[3] = {152,222,245};
+double building3[3] = {102,102,102};
+double building2[3] = {217,217,50};
+double building1Box2[3] = {237,237,187};
+double building1Box3[3] = {30,186,79};
+
+
+using namespace std;
+
+double train = 0;
+double car1 = 0;
+double car2 = 0;
+double car3=0;
+double car4=0;
+double fly = 0;
+double ship = -13;
+double ship2 = 0;
+double rain = 0;
+double fish1=0;
+double fish2=0;
+double fish3=0;
+double fish4=0;
+double fish5=0;
+
+
+GLuint LoadTexture(const char * filename)
+{
+    GLuint texture;
+    int width, height;
+    unsigned char * data;
+    FILE * file;
+    file = fopen(filename, "Rb");
+    if (file == NULL)
+        return 0;
+    width = 1024;
+    height = 512;
+    data = (unsigned char *)malloc(width * height * 3);
+
+    fread(data, width * height * 3, 1, file);
+    fclose(file);
+
+    for (int i = 0; i < width * height; ++i)
+    {
+        int index = i * 3;
+        unsigned char B, R;
+        B = data[index];
+        R = data[index + 2];
+        data[index] = R;
+        data[index + 2] = B;
+    }
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+    free(data);
+
+    return texture;
+}
+// **********arshad
+    float a=0.0,b=0.0,y=0.0;
+
+void drawfish2()
+{
+    glColor3f(0.0,0.0,0.0);
+    glPointSize(3.0);
+    glBegin(GL_POINTS);
+    glVertex2f(-0.73-b,-0.035);
+    glEnd();
+
+    glColor3f(1.0,1.0,0.0);//yellow fish
+    glBegin(GL_POLYGON);
+    glVertex2f(-0.7-b,-0.05);
+    glVertex2f(-0.75-b,-0.1);
+    glVertex2f(-0.85-b,-0.05);
+    glVertex2f(-0.75-b,0.0);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.8,0.5,0.0);
+    glVertex2f(-0.83-b,-0.05);
+    glVertex2f(-0.9-b,-0.09);
+    glVertex2f(-0.9-b,-0.01);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.8,0.5,0.0);
+    glVertex2f(-0.75-b,-0.095);
+    glVertex2f(-0.79-b,-0.125);
+    glVertex2f(-0.77-b,-0.07);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.8,0.5,0.0);
+    glVertex2f(-0.75-b,-0.007);
+    glVertex2f(-0.795-b,0.035);
+    glVertex2f(-0.77-b,-0.02);
+    glEnd();
+
+
+}
+
+
+
+void drawfish5()
+{
+    glColor3f(0.0,0.0,0.0);
+    glPointSize(3.0);
+    glBegin(GL_POINTS);
+    glVertex2f(0.73,-0.04);
+    glEnd();
+
+    glColor3f(1.0,1.0,0.0);//yellow fish
+    glBegin(GL_POLYGON);
+    glVertex2f(0.7,-0.05);
+    glVertex2f(0.75,-0.1);
+    glVertex2f(0.85,-0.05);
+    glVertex2f(0.75,0.0);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(0.83,-0.05);
+    glColor3f(1.8,0.5,0.0);
+    glVertex2f(0.9,-0.09);
+    glVertex2f(0.9,-0.01);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0,1.0,0.0);
+    glVertex2f(0.79,-0.125);
+    glVertex2f(0.77,-0.07);
+
+    glVertex2f(0.75,-0.095);
+
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(0.795,0.035);
+    glVertex2f(0.77,-0.02);
+    glVertex2f(0.75,-0.007);
+
+    glEnd();
+
+
+}
+
+
+void drawfish3()
+{
+    glColor3f(0.0,0.0,0.0);
+    glPointSize(3.0);
+    glBegin(GL_POINTS);
+    glVertex2f(0.83,0.165);
+    glEnd();
+
+    glColor3f(0.0,1.0,0.0);//green fish
+    glBegin(GL_POLYGON);
+    glVertex2f(0.8,0.15);
+    glVertex2f(0.85,0.2);
+    glVertex2f(0.95,0.15);
+    glVertex2f(0.85,0.10);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(0.93,0.15);
+    glVertex2f(0.98,0.19);
+    glVertex2f(0.98,0.11);
+    glEnd();
+
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(0.855,0.2);
+    glVertex2f(0.925,0.25);
+    glVertex2f(0.87,0.15);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(0.857,0.1);
+    glVertex2f(0.925,0.05);
+    glVertex2f(0.87,0.15);
+    glEnd();
+
+
+
+}
+
+void drawfish1()
+{
+    glColor3f(0.0,0.0,0.0);
+    glPointSize(3.0);
+    glBegin(GL_POINTS);
+    glVertex2f(0.73+a,0.065);
+    glEnd();
+
+    glColor3f(1.0,0.0,0.0);//red fish
+    glBegin(GL_POLYGON);
+    glVertex2f(0.7+a,0.05);
+
+    glVertex2f(0.75+a,0.1);
+
+    glVertex2f(0.85+a,0.05);
+    glVertex2f(0.75+a,0.0);
+    glEnd();
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0,0.0,0.0);
+    glVertex2f(0.83+a,0.05);
+    glColor3f(1.0,1.0,0.0);
+    glVertex2f(0.9+a,0.09);
+    glVertex2f(0.9+a,0.01);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0,1.0,0.0);
+    glVertex2f(0.75+a,0.095);
+    glColor3f(1.0,0.0,0.0);
+    glVertex2f(0.79+a,0.125);
+    glVertex2f(0.77+a,0.07);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0,1.0,0.0);
+    glVertex2f(0.75+a,0.007);
+    glColor3f(1.0,0.0,0.0);
+    glVertex2f(0.795+a,-0.035);
+    glVertex2f(0.77+a,0.02);
+    glEnd();
+
+
+
+
+}
+
+void drawfish4()
+{
+    glColor3f(0.0,0.0,0.0);
+    glPointSize(3.5);
+    glBegin(GL_POINTS);
+    glVertex2f(-0.73,0.065);
+    glEnd();
+
+    glColor3f(1.0,0.0,0.0);//red fish
+    glBegin(GL_POLYGON);
+    glVertex2f(-0.7,0.05);
+    glVertex2f(-0.75,0.1);
+    glVertex2f(-0.85,0.05);
+    glVertex2f(-0.75,0.0);
+    glEnd();
+
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-0.83,0.05);
+    glVertex2f(-0.9,0.09);
+    glVertex2f(-0.9,0.01);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-0.75,0.095);
+    glVertex2f(-0.79,0.125);
+    glVertex2f(-0.77,0.07);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-0.75,0.007);
+    glVertex2f(-0.795,-0.035);
+    glVertex2f(-0.77,0.02);
+    glEnd();
+
+
+
+}
+///end
+
+
 
 void drawCloud()
 {
@@ -143,32 +646,6 @@ void drawCloud()
     glutSolidSphere(0.7,40,40);
 }
 
-
-void drawTree()
-{
-    //Tree
-    glColor3ub(tree[0], tree[1], tree[2]);
-
-    glPushMatrix();
-    glutSolidSphere(0.25,40,40);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0.15,-0.15,0);
-    glutSolidSphere(0.25,40,40);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(-0.15,-0.15,0);
-    glutSolidSphere(0.25,40,40);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0,-0.3,0);
-    glRotatef(90,1,0,0);
-    draw_cylinder(0.04,0.7,137, 94, 41);
-    glPopMatrix();
-}
 
 
 void drawBush()
@@ -489,6 +966,11 @@ void drawTrain()
     glutSolidTorus(0.1, 0.2, 20, 20);
     glPopMatrix();
 
+
+    //train body 3
+
+
+
     //smoke
     glPushMatrix();
     glTranslatef(-0.65, 0.2, 1);
@@ -684,7 +1166,6 @@ void drawCurve()
     glEnd();
     glPopMatrix();
 }
-
 
 void drawBoat()
 {
@@ -1223,11 +1704,16 @@ void drawRoad()
     // Road Divider
     glColor3ub(255,255,255);
     glBegin(GL_QUADS);
-    glVertex3f(-5.4, -0.4, 0.0);
-    glVertex3f(5.4, -0.4, 0.0);
-    glVertex3f(5.4, -0.5, 0.0);
-    glVertex3f(-5.4, -0.5, 0.0);
+    glVertex3f(-5.6, -0.4, 0.0);
+    glVertex3f(5.6, -0.4, 0.0);
+    glVertex3f(5.6, -0.5, 0.0);
+    glVertex3f(-5.6, -0.5, 0.0);
     glEnd();
+
+
+
+
+
 
     // white box for 2nd
 
@@ -1266,10 +1752,10 @@ void drawRoad()
     // road coordinate
     glColor3ub(0,0,0);
     glBegin(GL_QUADS);
-    glVertex3f(-5.4, 0.1, 0.0);
-    glVertex3f(5.4, 0.1, 0.0);
-    glVertex3f(5.4, -1.5, 0.0);
-    glVertex3f(-5.4, -1.5, 0.0);
+    glVertex3f(-5.6, 0.1, 0.0);
+    glVertex3f(5.6, 0.1, 0.0);
+    glVertex3f(5.6, -1.5, 0.0);
+    glVertex3f(-5.6, -1.5, 0.0);
     glEnd();
 
 
@@ -1516,21 +2002,6 @@ void drawNewCar3(){
     glEnd();
 
 
-/*
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.0,-1.05,0.0);
-    glVertex3f(-4.0,-0.69,0.0);
-    glVertex3f(-3.6,-1.05,0.0);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.98,-1.05,0.0);
-    glVertex3f(-4.98,-0.69,0.0);
-    glVertex3f(-5.4,-1.05,0.0);
-    glEnd();
-*/
 }
 
 
@@ -1738,7 +2209,6 @@ void drawNewCar(){
     wheel(.1,-.52,.1655);
     wheel(-.4,-.52,0.165);
     // wheel(-8.5,-1.7,0.2);
-
     glBegin(GL_QUADS);
 {
     glColor3f(1.0f,0.0f,0.0f); //red
@@ -1840,7 +2310,7 @@ glLineWidth(1.2);
             }
 	glEnd();
 
-glPopMatrix();
+//glPopMatrix();
 
 }
 
@@ -1900,6 +2370,31 @@ void drawCar()
     glVertex3f(-5.4,-1.05,0.0);
     glEnd();
 }
+
+    double setUpSpeed(double z){
+
+    if(freeze==true){
+
+        return 0.0;
+    }
+
+    else if(freeze==false){
+
+    if(VelocityUp==true){
+    double x = 0.2f;
+
+    return x;
+
+        }
+
+    if(VelocityUp==false)
+        {
+
+        return z;
+
+        }
+        }
+    }
 ////**********************end
     void drawPlane()
     {
@@ -1907,7 +2402,7 @@ void drawCar()
     glPushMatrix();
     glTranslatef(0,-1,0);
     glScalef(5,0.8,0.1);
-    glColor3f(1,1,1);
+    glColor3ub(242, 170, 76);
     glutSolidCube(0.2);
     glPopMatrix();
 
@@ -1916,7 +2411,7 @@ void drawCar()
     glTranslatef(0.5,-0.92,0);
     glScalef(0.15,0.16,1);
     glRotatef(90,0,0,-1);
-    glColor3f(1,0,0);
+    glColor3ub(16, 24, 32);
     glBegin(GL_TRIANGLES);
     glVertex3f(0,0,0);
     glVertex3f(1,0,0);
@@ -1962,78 +2457,7 @@ void drawCar()
 
 
     }
-/*
-void drawRainbow()
-{
-    float i;
-    float px = -0.2;
-    float py = -0.5;
-    float side_length = -0.7;
-    float r = 1.625; // sculling constant for a 500:800
-    float sectx = px+side_length;
-    float secty = py;
-    float topx =  px+(side_length/2.0);
-    float topy =  (py+side_length*-0.866*r);
 
-
-    float hit = 0.7; // Where to hit [0,1]
-
-
-    // `cept` is computing where the light ray will hit the prism
-    float ceptx =sectx-(hit*(side_length/2.0));
-    float cepty =-1.73205*r*hit*(side_length/2.0)+py;
-
-    // These are the parameters for the spread of the inside refraction
-    hit = 0.4; // Where to on the right side, [0,1]
-    float exitxU = (px+side_length/2.0)-hit*side_length/2.0;
-    float exityU = (-1.73205*r*(1-hit)*(side_length/2.0))+py;
-    hit=0.1;  // Try changing this number
-    float exitxL=(px+side_length/2.0)-hit*side_length/2.0;
-    float exityL=(-1.73205*r*(1-hit)*(side_length/2.0))+py;
-
-
-    // #Draw the rainbow tail
-    // The rainbow is made of 50 small rectangles that have rainbow shading. They are painted one after the other but the y coordinate is mapped to a sine wave. The height of the rainbow slices are based on the refraction triangle boundaries in the prism.
-    float dx=exitxL;
-    float dy=exityL;
-    float w=0.014;
-    float step=(exityL-exityU)/5.0;
-    for(i=0; i<50; i++)
-    {
-        glBegin(GL_QUAD_STRIP);
-
-        glColor3f(1,0,0);
-        glVertex2f(dx,dy);
-        glVertex2f(dx+w,dy);
-
-        glColor3f(1,0.6,0);
-        glVertex2f(dx,dy-step);
-        glVertex2f(dx+w,dy-step);
-
-        glColor3f(1,1,0);
-        glVertex2f(dx,dy-step*2);
-        glVertex2f(dx+w,dy-step*2);
-
-        glColor3f(0.2,1,0);
-        glVertex2f(dx,dy-step*3);
-        glVertex2f(dx+w,dy-step*3);
-
-        glColor3f(0,0.6,1);
-        glVertex2f(dx,dy-step*4);
-        glVertex2f(dx+w,dy-step*4);
-
-        glColor3f(0.4,0.2,1);
-        glVertex2f(dx,dy-step*5);
-        glVertex2f(dx+w,dy-step*5);
-        glEnd();
-
-        dx+=w;
-        dy+=0.01*sin(i*3.14/5.0);
-
-    }
-}
-
-*/
     void drawRain()
     {
     for(int i=0; i<100; i++)
@@ -2444,7 +2868,7 @@ void firstBackGroundHouse()
 
     x = -4.06, y = -3.96;
     for(int i=0; i<8; i++, x+=0.14, y+=0.14) {
-        glColor3ub(0,0,0);
+        glColor3ub(firstBuildingWindowColor[0],firstBuildingWindowColor[1], firstBuildingWindowColor[2]);
         glBegin(GL_QUADS);
         glVertex3f(x, 1.23, 0.0);
         glVertex3f(y, 1.23, 0.0);
@@ -2459,7 +2883,7 @@ void firstBackGroundHouse()
 
     x = -4.06, y = -3.96;
     for(int i=0; i<8; i++, x+=0.14, y+=0.14) {
-        glColor3ub(0,0,0);
+        glColor3ub(firstBuildingWindowColor[0],firstBuildingWindowColor[1], firstBuildingWindowColor[2]);
         glBegin(GL_QUADS);
         glVertex3f(x, 1.11, 0.0);
         glVertex3f(y, 1.11, 0.0);
@@ -2481,7 +2905,7 @@ void firstBackGroundHouse()
 
     x = -4.16, y = -4.12;
     for(int i=0; i<17; i++, x+=0.08, y+=0.08) {
-        glColor3ub(0,0,0);
+        glColor3ub(firstBuildingWindowColor[0],firstBuildingWindowColor[1], firstBuildingWindowColor[2]);
         glBegin(GL_QUADS);
         glVertex3f(x, 0.98, 0.0);
         glVertex3f(y, 0.98, 0.0);
@@ -2503,7 +2927,7 @@ void firstBackGroundHouse()
 
     x = -4.05, y = -3.99;
     for(int i=0; i<11; i++, x+=0.10, y+=0.10) {
-        glColor3ub(0,0,0);
+        glColor3ub(firstBuildingWindowColor[0],firstBuildingWindowColor[1], firstBuildingWindowColor[2]);
         glBegin(GL_QUADS);
         glVertex3f(x, 0.83, 0.0);
         glVertex3f(y, 0.83, 0.0);
@@ -2524,7 +2948,7 @@ void firstBackGroundHouse()
 
     // Door of 6 line
 
-    glColor3ub(0,0,0);
+    glColor3ub(firstBuildingWindowColor[0],firstBuildingWindowColor[1], firstBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(-3.7, 0.67, 0.0);
     glVertex3f(-3.3, 0.67, 0.0);
@@ -2574,7 +2998,7 @@ void SecondBackgoundHouse()
     glEnd();
 
     // windows
-    glColor3ub(0,0,0);
+    glColor3ub(secondBuildingWindowColor[0],secondBuildingWindowColor[1],secondBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(-2.2, 1.1, 0.0);
     glVertex3f(-2.0, 1.1, 0.0);
@@ -2582,7 +3006,7 @@ void SecondBackgoundHouse()
     glVertex3f(-2.2, 0.8, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(secondBuildingWindowColor[0],secondBuildingWindowColor[1],secondBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(-2.2, 0.7, 0.0);
     glVertex3f(-2.0, 0.7, 0.0);
@@ -2590,7 +3014,7 @@ void SecondBackgoundHouse()
     glVertex3f(-2.2, 0.4, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(secondBuildingWindowColor[0],secondBuildingWindowColor[1],secondBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(-1.0, 1.1, 0.0);
     glVertex3f(-0.8, 1.1, 0.0);
@@ -2598,7 +3022,7 @@ void SecondBackgoundHouse()
     glVertex3f(-1.0, 0.8, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(secondBuildingWindowColor[0],secondBuildingWindowColor[1],secondBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(-1.0, 0.7, 0.0);
     glVertex3f(-0.8, 0.7, 0.0);
@@ -2608,14 +3032,14 @@ void SecondBackgoundHouse()
 
     // door
 
-    glColor3ub(255,255,255);
+    glColor3ub(secondBuildingWindowColor[0],secondBuildingWindowColor[1],secondBuildingWindowColor[2]);
     glBegin(GL_TRIANGLES);
     glVertex3f(-1.9, 0.9, 0.0);
     glVertex3f(-1.1, 0.9, 0.0);
     glVertex3f(-1.5, 1.1, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(secondBuildingWindowColor[0],secondBuildingWindowColor[1],secondBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(-1.8, 0.9, 0.0);
     glVertex3f(-1.2, 0.9, 0.0);
@@ -2649,7 +3073,7 @@ void ThirdBackgoundHouse()
 
     // windows for bar 1
 
-    glColor3ub(0,0,0);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(0.1, 1.3, 0.0);
     glVertex3f(0.4, 1.3, 0.0);
@@ -2657,7 +3081,7 @@ void ThirdBackgoundHouse()
     glVertex3f(0.1, 1.1, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(0.1, 1.0, 0.0);
     glVertex3f(0.4, 1.0, 0.0);
@@ -2665,7 +3089,7 @@ void ThirdBackgoundHouse()
     glVertex3f(0.1, 0.8, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(0.1, 0.7, 0.0);
     glVertex3f(0.4, 0.7, 0.0);
@@ -2686,7 +3110,7 @@ void ThirdBackgoundHouse()
 
     // windows for bar 2
 
-    glColor3ub(0,0,0);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(0.6, 1.3, 0.0);
     glVertex3f(0.9, 1.3, 0.0);
@@ -2694,7 +3118,7 @@ void ThirdBackgoundHouse()
     glVertex3f(0.6, 1.1, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(0.6, 1.0, 0.0);
     glVertex3f(0.9, 1.0, 0.0);
@@ -2702,7 +3126,7 @@ void ThirdBackgoundHouse()
     glVertex3f(0.6, 0.8, 0.0);
     glEnd();
 
-    glColor3ub(0,0,0);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(0.6, 0.7, 0.0);
     glVertex3f(0.9, 0.7, 0.0);
@@ -2722,7 +3146,7 @@ void ThirdBackgoundHouse()
 
     // windows for bar 3
 
-    glColor3ub(255,255,255);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(1.1, 1.3, 0.0);
     glVertex3f(1.4, 1.3, 0.0);
@@ -2730,7 +3154,7 @@ void ThirdBackgoundHouse()
     glVertex3f(1.1, 1.1, 0.0);
     glEnd();
 
-    glColor3ub(255,255,255);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(1.1, 1.0, 0.0);
     glVertex3f(1.4, 1.0, 0.0);
@@ -2738,7 +3162,7 @@ void ThirdBackgoundHouse()
     glVertex3f(1.1, 0.8, 0.0);
     glEnd();
 
-    glColor3ub(255,255,255);
+    glColor3ub(thirdBuildingWindowColor[0],thirdBuildingWindowColor[1],thirdBuildingWindowColor[2]);
     glBegin(GL_QUADS);
     glVertex3f(1.1, 0.7, 0.0);
     glVertex3f(1.4, 0.7, 0.0);
@@ -2748,7 +3172,7 @@ void ThirdBackgoundHouse()
 
     // third bar
 
-    glColor3ub(0,0,0);
+    glColor3ub(0,102,204);
     glBegin(GL_QUADS);
     glVertex3f(1.0, 1.55, 0.0);
     glVertex3f(1.5, 1.55, 0.0);
@@ -2831,7 +3255,7 @@ void ForthBackgroundHouse()
 
     // door
 
-    glColor3ub(153, 229, 178);
+    glColor3ub(forthBuildingWindowColor[0], forthBuildingWindowColor[1], forthBuildingWindowColor[2]);
     glBegin(GL_POLYGON);
     glVertex3f(2.4, 0.7, 0.0);
     glVertex3f(2.8, 0.7, 0.0);
@@ -2889,17 +3313,73 @@ float _ang_tri = 0.0;
 //Draws the 3D scene
 void drawScene()
 {
+
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
     glTranslatef(0.0, 0.0, -7.0); //Move forward 5 units
 
+    //dolna
+    drawCredle();
+    //tree
+    glPushMatrix();
+    glScalef(0.7,0.7,1);
+    glTranslatef(-7,1.4,0);
+    drawTree();
+    glPopMatrix();
 
+    //tree
+    glPushMatrix();
+    glScalef(0.7,0.7,1);
+    glTranslatef(-6.3,1.4,0);
+    drawTree();
+    glPopMatrix();
+
+
+    //tree
+    glPushMatrix();
+    glScalef(0.7,0.7,1);
+    glTranslatef(-0.3,1.4,0);
+    drawTree();
+    glPopMatrix();
+
+    //tree
+    glPushMatrix();
+    glScalef(0.7,0.7,1);
+    glTranslatef(2.3,1.4,0);
+    drawTree();
+    glPopMatrix();
+
+    //tree
+    glPushMatrix();
+    glScalef(0.7,0.7,1);
+    glTranslatef(4.7,1.4,0);
+    drawTree();
+    glPopMatrix();
+
+    //tree
+    glPushMatrix();
+    glTranslatef(-2.5,1,0);
+    glScalef(0.7,0.7,1);
+    drawTree();
+    glPopMatrix();
+    glPopMatrix();
+
+    //drawLight();
+    if(nightLight){
+            nightLightFun();
+
+    }
     // Build Home In the Sky
 
     //house 1
     BackgroundHouse();
-
+    //road
+    glPushMatrix();
+    drawLight();
+    drawRoad();
+    glPopMatrix();
 
     //Sky
     glPushMatrix();
@@ -2984,172 +3464,8 @@ void drawScene()
     glPopMatrix();
     glTranslatef(0,0,0.1);
 
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(-4,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(-6,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(-5.5,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(0,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(-1,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(2,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(4,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-
-
-    //tree
-//    glPushMatrix();
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(6,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-
-
-    //tree
-//    glPushMatrix();
-//
-//    glScalef(0.7,0.7,1);
-//    glTranslatef(6.5,1.4,0);
-//    drawTree();
-//    glPopMatrix();
-
-
-
-    //tree
-//    glPushMatrix();
-//    glTranslatef(-2,1,0);
-//    glScalef(0.7,0.7,1);
-//    drawTree();
-//    glPopMatrix();
 
     glPopMatrix();
-
-    //bush
-//    glPushMatrix();
-//    glTranslatef(-5,0.3,0);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(-4.5,0.3,0);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(-3.5,0.3,0);
-//    glScalef(0.8,0.8,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(-3,0.3,0);
-//    glScalef(1.5,1.5,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(-1.5,0.3,0);
-//    glScalef(1,2,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(-1,0.3,0);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(2,0.3,0);
-//    glScalef(1,2,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(2.5,0.3,0);
-//    glScalef(1,2,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(3.5,0.3,0);
-//    glScalef(0.8,0.8,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(4,0.3,0);
-//    glScalef(0.8,0.8,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(0,0.3,0);
-//    glScalef(0.8,0.8,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(0.3,0.3,0);
-//    glScalef(0.8,0.8,1);
-//    drawBush();
-//    glPopMatrix();
-//
-//    //bush
-//    glPushMatrix();
-//    glTranslatef(0.6,0.3,0);
-//    glScalef(1,1.3,1);
-//    drawBush();
-//    glPopMatrix();
 
     //Train
     glPushMatrix();
@@ -3159,62 +3475,7 @@ void drawScene()
     drawTrain();
     glPopMatrix();
 
-    //house 1
- //   glPushMatrix();
-   // glTranslatef(-3,-1,0.5);
-   // glScalef(0.7,0.7,1);
-  //  DrawHouse();
-  //  glPopMatrix();
 
-    //house 2
- //   glPushMatrix();
-  //  glTranslatef(-3.8,-1,0);
-  //  glScalef(0.7,0.7,1);
-  //  DrawHouse();
-  //  glPopMatrix();
-
-    //house3
-  //  glPushMatrix();
-  //  glTranslatef(-4,-1.3,0.5);
- /*   glScalef(0.7,0.7,1);
-    DrawHouse();
-    glPopMatrix();
-
-
-    //tree
-    glPushMatrix();
-    glTranslatef(-3.5,-0.5,0.5);
-    glScalef(0.8,0.8,1);
-    drawTree();
-    glPopMatrix();
-
-    //tree
-    glPushMatrix();
-    glTranslatef(-3.2,-0.8,0.5);
-    glScalef(0.8,0.8,1);
-    drawTree();
-    glPopMatrix();
-
-    //circle tree
-    glPushMatrix();
-    glTranslatef(-5,-0.95,0);
-    glScalef(1,1,0.2);
-    glColor3ub(38, 171, 80);
-    glutSolidSphere(0.55,40,40);
-    glPopMatrix();
-
-    //circle tree 2
-    glPushMatrix();
-    glTranslatef(-4.5,-0.9,0);
-    glScalef(1,1,0.1);
-    glColor3ub(14, 125, 49);
-    glutSolidSphere(0.55,40,40);
-    glPopMatrix();
-
-*/
-
-//    glPopMatrix();
-//arshad
     //water circle
     glPushMatrix();
     glColor3ub(water[0],water[1],water[2]);
@@ -3224,53 +3485,7 @@ void drawScene()
     glutSolidCube(4.3);
     glPopMatrix();
 //end
-   /* glPushMatrix();
-    glColor3ub(140,82,41);
-    glTranslatef(4.5,-3,0);
-    glScalef(1.3,0.8,0.1);
-    glutSolidSphere(3.5,80,80);
-    glPopMatrix();
 
-    glPushMatrix();
-    glColor3ub(163,147,135);
-    glTranslatef(4.5,-3,1.1);
-    glScalef(1.3,0.8,0.1);
-    glutSolidSphere(3.2,80,80);
-    glPopMatrix();
-*/
-
-//    //pol ar gada
-//    glPushMatrix();
-//    glTranslatef(-2.2,-0.8,1);
-//    glScalef(0.4,0.8,1);
-//    glRotatef(180,0,0,1);
-//    glColor3ub(cowFood[0],cowFood[1],cowFood[2]);
-//    GLfloat midY = 0.001;
-//    GLfloat midX = 0.001;
-//    GLfloat y = 0;
-//    glBegin(GL_POLYGON);
-//    for(GLfloat x = -1; x <= 1.05; x+=0.05)
-//    {
-//        y = x*x;
-//        glVertex2f(midX + x, midY + y);
-//    }
-//    glEnd();
-//    glPopMatrix();
-
-
-//    //house 2
-//    glPushMatrix();
-//    glTranslatef(-1,-1.7,0);
-//    glScalef(0.7,0.7,1);
-//    DrawHouse2();
-//    glPopMatrix();
-//
-//    //house 2
-//    glPushMatrix();
-//    glTranslatef(-0.7,-1.7,-0.5);
-//    glScalef(0.7,0.7,1);
-//    DrawHouse2();
-//    glPopMatrix();
 ////////////////arshad
     //ship 1
     glPushMatrix();
@@ -3280,6 +3495,119 @@ void drawScene()
     drawBoat();
     glPopMatrix();
 
+////fish1 red
+    glPushMatrix();
+    glTranslatef(-fish1,0,0);
+    glTranslatef(1.6,-1.45,2);
+    glScalef(2.33,1.14,1);
+    drawfish1();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-fish1,0,0);
+    glTranslatef(4,-1.45,2);
+    glScalef(2.33,1.14,1);
+    drawfish1();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(-fish1,0,0);
+    glTranslatef(1,-1.45,2);
+    glScalef(2.33,1.14,1);
+    drawfish1();
+    glPopMatrix();
+
+//// fish2 yelloq
+    glPushMatrix();
+    glTranslatef(fish2,0,0);
+    glTranslatef(1.6,-1.3,2);
+    glScalef(2.33,1.14,1);
+    drawfish2();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(fish2,0,0);
+    glTranslatef(-5,-1.3,2);
+    glScalef(2.33,1.14,1);
+    drawfish2();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(fish2,0,0);
+    glTranslatef(1,-1.3,2);
+    glScalef(2.33,1.14,1);
+    drawfish2();
+    glPopMatrix();
+
+    //fish3 green
+     glPushMatrix();
+    glTranslatef(-fish3,0,0);
+    glTranslatef(1.8,-1.8,2);
+    glScalef(2.33,1.14,1);
+    drawfish3();
+    glPopMatrix();
+
+     glPushMatrix();
+    glTranslatef(-fish3,0,0);
+    glTranslatef(6,-1.8,2);
+    glScalef(2.33,1.14,1);
+    drawfish3();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(-fish3,0,0);
+    glTranslatef(0,-1.4,2);
+    glScalef(2.33,1.14,1);
+    drawfish3();
+    glPopMatrix();
+
+//fish4 //red fish
+    glPushMatrix();
+    glTranslatef(fish4,0,0);
+    glTranslatef(1.8,-2.0,2);
+    glScalef(2.33,1.14,1);
+    drawfish4();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(fish4,0,0);
+    glTranslatef(-6,-1.47,2);
+    glScalef(2.33,1.14,1);
+    drawfish4();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(fish4,0,0);
+    glTranslatef(2.2,-1.9,2);
+    glScalef(2.33,1.14,1);
+    drawfish4();
+    glPopMatrix();
+//fish5
+    glPushMatrix();
+    glTranslatef(-fish5,0,0);
+    glTranslatef(-2.7,-1.5,2);
+    glScalef(2.33,1.14,1);
+    drawfish5();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-fish5,0,0);
+    glTranslatef(8,-1.5,2);
+    glScalef(2.33,1.14,1);
+    drawfish5();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(-fish5,0,0);
+    glTranslatef(-2.1,-1.5,2);
+    glScalef(2.33,1.14,1);
+    drawfish5();
+    glPopMatrix();
     //ship 2
     glPushMatrix();
     glTranslatef(ship2,0.2,0);
@@ -3287,7 +3615,7 @@ void drawScene()
     glScalef(0.13,0.04,1);
     drawBoat();
     glPopMatrix();
-//end
+    //*******************end
     //flower on water
     glPushMatrix();
     glTranslatef(3.5,-1.8,1);
@@ -3343,25 +3671,6 @@ void drawScene()
     glPopMatrix();
 
 
-    //road
-    glPushMatrix();
-    drawRoad();
-    glPopMatrix();
-
-    ///////////////////////////////////////////////////////// arshad
-    //   glPushMatrix();
- //   glTranslatef(-car1,0,0);
-  //  glTranslatef(8,-0.45,1);
-  //  glScalef(0.2,0.2,1);
-  //  drawCar();
-  //  glPopMatrix();
-    //////////////////////// car3(red cars) display
-  //  glPushMatrix();
-   // glTranslatef(-car3,1,0);
-   // glTranslatef(8,-0.45,1);
-   // glScalef(1.2,.6,0.2);
-   // drawNewCar();
-   // glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-car3,1,0);
@@ -3404,32 +3713,8 @@ void drawScene()
     glScalef(.8,.4,0.2);
     drawNewCar();
     glPopMatrix();
-/*
-//
-    //car /////////////
-   // glPushMatrix();
-   // glTranslatef(-car1,0,0);
-   // glTranslatef(3.5,-0.3,1);
-   // glScalef(2,1,1);
-   // drawNewCar();
-   // glPopMatrix();
 
-    //car
-    glPushMatrix();
-    glTranslatef(-car1,0,0);
-    glTranslatef(6,-0.3,1);
-    glScalef(0.2,0.2,1);
-    drawCar();
-    glPopMatrix();
 
-    //car
-    glPushMatrix();
-    glTranslatef(-car1,0,0);
-    glTranslatef(4,-0.4,1);
-    glScalef(0.2,0.2,1);
-    drawCar();
-    glPopMatrix();
-*/
     ////////////...............
 //// car2 display
 
@@ -3447,19 +3732,7 @@ void drawScene()
     drawNewCar2();
     glPopMatrix();
 
- //   glPushMatrix();
-  //  glTranslatef(car2,0.2,0);
-  //  glTranslatef(-1,.9,3);
-  //  glScalef(.8,.4,0);
-  //  drawNewCar2();
-  //  glPopMatrix();
 
-   // glPushMatrix();
-  //  glTranslatef(car2,0.2,0);
-   // glTranslatef(10,0.7,3);
-  //  glScalef(.8,.4,0);
-   // drawNewCar2();
-   // glPopMatrix();
     ///////////
      //car 4 display
     glPushMatrix();
@@ -3480,46 +3753,8 @@ void drawScene()
     drawNewCar4();
     glPopMatrix();
 
-     // glPushMatrix();
-   // glTranslatef(-car1,0,0);
-  //  glTranslatef(1,-0.15,1);
-  //  glScalef(0.2,0.2,1);
-  //  drawNewCar4();
-  //  glPopMatrix();
-/*
-   //car
-    glPushMatrix();
-    glTranslatef(car1,0,0);
-    glTranslatef(-1,0.15,1);
-    glScalef(0.2,0.2,1);
-    drawCar();
-    glPopMatrix();
-
-    //car ///////////////////
-    glPushMatrix();
-    glTranslatef(car1,0,0);
-    glTranslatef(-3,0.3,1);
-    glScalef(0.2,0.2,1);
-    drawCar();
-    glPopMatrix();
-
-    //car
-    glPushMatrix();
-    glTranslatef(car1,0,0);
-    glTranslatef(-6,0.3,1);
-    glScalef(0.2,0.2,1);
-    drawCar();
-    glPopMatrix();
-////****************************************
-    //car
-    glPushMatrix();
-    glTranslatef(car1,0,0);
-    glTranslatef(-4,0.1,1);
-    glScalef(0.2,0.2,1);
-    drawCar();
-    glPopMatrix();
-    */
 //////////////end
+
     //helicopter
     glPushMatrix();
     glTranslatef(fly,-1,0);
@@ -3568,81 +3803,96 @@ void drawScene()
 
     //draw Bird
     glPushMatrix();
+    glScalef(3, 1, 1);
     drawBird();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
-    glTranslatef(0, 0, 1);
-    glScalef(0.05, 0.05, 1);
-    drawBird2();
+    glScalef(3, 0.7, 1);
+    drawBird();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.1, 0, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.1, 0.1, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.1, -0.1, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.2, -0.1, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.2, -0.2, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.2, 0, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.2, 0.1, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
 
     //draw Bird
     glPushMatrix();
     glTranslatef(-0.2, 0.2, 1);
     glScalef(0.05, 0.05, 1);
-    drawBird2();
+    //drawBird2();
     glPopMatrix();
-
 
     glPopMatrix();
 
     glutSwapBuffers();
+
 }
 
 void update(int value)
 {
-    _angle += 0.002f;
+
+if(freeze==true){
+    _angle+=0.0f;
+}
+else if(VelocityUp==false){
+    _angle+=0.001f;
+
+}
+else if(VelocityUp==true){
+    _angle+=0.01f;
+}
+
+
+ if(_angle>3.0f){
+    _angle=0.0f;
+ }
 
 
     glutPostRedisplay(); //Tell GLUT that the display has changed
@@ -3653,19 +3903,107 @@ void update(int value)
 
 void trainAnimation(int value)
 {
+    double z= setUpSpeed(0.1f);
+    train += z;
 
-    train += 0.1f;
+    if(train>35.0f)
+    {
+        train = -22.0f;
+    }
 
     glutPostRedisplay();
 
     glutTimerFunc(25, trainAnimation, 0);
 }
 //////////////arshad
+
+void fish1Animation(int value){
+
+double z=setUpSpeed(0.03f);
+    fish1 += z;
+    //car1 += 0.03f;
+    if(fish1>15.0f)
+    {
+        fish1 = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, fish1Animation, 0);
+
+
+}
+void fish2Animation(int value){
+
+double z=setUpSpeed(0.03f);
+    fish2 += z;
+    //car1 += 0.03f;
+    if(fish2>15.0f)
+    {
+        fish2 = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, fish2Animation, 0);
+
+
+}
+void fish3Animation(int value){
+
+double z=setUpSpeed(0.03f);
+    fish3 += z;
+    //car1 += 0.03f;
+    if(fish3>15.0f)
+    {
+        fish3 = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, fish3Animation, 0);
+
+
+}
+void fish4Animation(int value){
+
+double z=setUpSpeed(0.03f);
+    fish4 += z;
+    //car1 += 0.03f;
+    if(fish4>15.0f)
+    {
+        fish4 = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, fish4Animation, 0);
+
+
+}
+void fish5Animation(int value){
+
+double z=setUpSpeed(0.03f);
+    fish5 += z;
+    //car1 += 0.03f;
+    if(fish5>15.0f)
+    {
+        fish5 = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, fish5Animation, 0);
+
+
+}
+
 void carAnimation1(int value)
 {
 
-
-    car1 += 0.03f;
+     double z=setUpSpeed(0.03f);
+    car1 += z;
+    //car1 += 0.03f;
     if(car1>15.0f)
     {
         car1 = -5.0f;
@@ -3681,7 +4019,11 @@ void carAnimation3(int value)
 {
 
 
-    car4 += 0.05f;
+  double z=setUpSpeed(0.05f);
+    car4 += z;
+
+
+  //  car4 += 0.05f;
     if(car4>30.0f)
     {
         car4 = -5.0f;
@@ -3694,9 +4036,12 @@ void carAnimation3(int value)
 void newcarAnimation(int value)
 {
 
+  double z=setUpSpeed(0.026f);
+    car3 += z;
 
-    car3 += 0.026f;
-    cout<<car3<<endl;
+
+    //car3 += 0.026f;
+//cout<<car3<<endl;
     if(car3>30.0f)
     {
         car3 = -5.0f;
@@ -3709,7 +4054,10 @@ void newcarAnimation(int value)
 }
 void newcarAnimation3(int value)
 {
-    car2+=0.03f;
+
+  double z=setUpSpeed(0.03f);
+    car2 += z;
+
 
 
     if(car2>30.0f){
@@ -3723,9 +4071,10 @@ void newcarAnimation3(int value)
 ////////////////*****************************end
 void flyAnimation(int value)
 {
+  double z=setUpSpeed(0.04f);
+    fly += z;
 
-
-    fly += 0.04f;
+  //  fly += 0.04f;
     if(fly>25.0f)
     {
         //move=true;
@@ -3739,11 +4088,13 @@ void flyAnimation(int value)
 /////////arshad
 void shipAnimation(int value)
 {
+ double z= setUpSpeed(0.01f);
+ ship+=z;
 
+ //cout<<"ship1 (2)"<<ship<<endl;
 
-    ship += 0.01f;
-if(ship>16.0f)
-   ship=-13;
+    if(ship>16.0f)
+    ship=-13;
 
     glutPostRedisplay();
 
@@ -3752,6 +4103,7 @@ if(ship>16.0f)
 
 void shipAnimation2(int value)
 {
+
 
 
     if(ship2 <= -13)
@@ -3765,11 +4117,23 @@ void shipAnimation2(int value)
       //      ship2=ship2-.005;
        // }
 
+       double z= setUpSpeed(0.005f);
+       ship2-=z;
+  /*
+    if(VelocityUp==true)
+    {
+
+    ship2-= 0.2f;
+
+    }
+
     else
     {
         ship2 -= 0.005f;
-    }
+         cout<<"ship 2 false"<<endl;
 
+    }
+*/
     glutPostRedisplay();
 
     glutTimerFunc(25, shipAnimation2, 0);
@@ -3777,7 +4141,9 @@ void shipAnimation2(int value)
 //////////end
 void rainAnimation(int value)
 {
-    rain += 0.02f;
+    double z= setUpSpeed(0.02);
+    rain+=z;
+   // rain += 0.02f;
     if(rain>0.1f)
     {
         //move=true;
@@ -3793,9 +4159,25 @@ void keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
+        // arshad**
+    case 'v':
+        VelocityUp= true;
+
+        break;
+
+
+    case 'w' :
+    VelocityUp=false;
+    freeze=false;
+    break;
+
+    case 'f' :
+        freeze=true;
+        break;
+        //end
 
     case 'r':
-
+        nightLight = false;
         Rain = true;
         if(!night)
         {
@@ -3871,6 +4253,8 @@ void keyboard(unsigned char key, int x, int y)
 
     case 'n':
         night = true;
+        nightLight = true;
+
         if(night && !Rain)
         {
             sky[0] = 77;
@@ -3897,15 +4281,23 @@ void keyboard(unsigned char key, int x, int y)
             water[0] = 68;
             water[1] = 142;
             water[2] = 201;
-            building2[0] = 102;
-            building2[1] = 102;
-            building2[2] = 102;
-            building1Box2[0] = 102;
-            building1Box2[1] = 102;
-            building1Box2[2] = 102;
-            building1Box3[0] = 102;
-            building1Box3[1] = 102;
-            building1Box3[2] = 102;
+            firstBuildingWindowColor[0] = 255;
+            firstBuildingWindowColor[1] = 255;
+            firstBuildingWindowColor[2] = 153;
+
+            secondBuildingWindowColor[0] = 153;
+            secondBuildingWindowColor[1] = 255;
+            secondBuildingWindowColor[2] = 255;
+
+            thirdBuildingWindowColor[0] = 255;
+            thirdBuildingWindowColor[1] = 255;
+            thirdBuildingWindowColor[2] = 255;
+
+            forthBuildingWindowColor[0] = 255;
+            forthBuildingWindowColor[1] = 102;
+            forthBuildingWindowColor[2] = 178;
+
+
             PlaySound(TEXT("night.wav"),NULL,SND_ASYNC|SND_FILENAME|SND_LOOP);
         }
         else if(night && Rain)
@@ -3934,22 +4326,36 @@ void keyboard(unsigned char key, int x, int y)
             water[0] = 68;
             water[1] = 142;
             water[2] = 201;
-            building2[0] = 102;
-            building2[1] = 102;
-            building2[2] = 102;
-            building1Box2[0] = 102;
-            building1Box2[1] = 102;
-            building1Box2[2] = 102;
-            building1Box3[0] = 102;
-            building1Box3[1] = 102;
-            building1Box3[2] = 102;
+            firstBuildingWindowColor[0] = 255;
+            firstBuildingWindowColor[1] = 255;
+            firstBuildingWindowColor[2] = 153;
+
+            secondBuildingWindowColor[0] = 153;
+            secondBuildingWindowColor[1] = 255;
+            secondBuildingWindowColor[2] = 255;
+
+            thirdBuildingWindowColor[0] = 255;
+            thirdBuildingWindowColor[1] = 255;
+            thirdBuildingWindowColor[2] = 255;
+
+            forthBuildingWindowColor[0] = 255;
+            forthBuildingWindowColor[1] = 102;
+            forthBuildingWindowColor[2] = 178;
+
+            glBegin(GL_TRIANGLES);
+            glColor3ub(255, 255, 0);
+            glVertex2f(-2.9f,-0.6f);
+            glVertex2f(-2.7f,-0.6f);
+            glVertex2f(-2.8f,-0.2f);
+            glEnd();
+
         }
 
         break;
 
     case 'd':
         night = false;
-
+        nightLight = false;
         if(!Rain)
         {
             sky[0] = 19;
@@ -3976,15 +4382,22 @@ void keyboard(unsigned char key, int x, int y)
             water[0] = 152;
             water[1] = 222;
             water[2] = 245;
-            building2[0] = 217;
-            building2[1] = 217;
-            building2[2] = 50;
-            building1Box2[0] = 237;
-            building1Box2[1] = 237;
-            building1Box2[2] = 187;
-            building1Box3[0] = 30;
-            building1Box3[1] = 186;
-            building1Box3[2] = 79;
+            firstBuildingWindowColor[0] = 0;
+            firstBuildingWindowColor[1] = 0;
+            firstBuildingWindowColor[2] = 0;
+
+            secondBuildingWindowColor[0] = 0;
+            secondBuildingWindowColor[1] = 0;
+            secondBuildingWindowColor[2] = 0;
+
+            thirdBuildingWindowColor[0] = 0;
+            thirdBuildingWindowColor[1] = 0;
+            thirdBuildingWindowColor[2] = 0;
+
+            forthBuildingWindowColor[0] = 0;
+            forthBuildingWindowColor[1] = 0;
+            forthBuildingWindowColor[2] = 0;
+
             PlaySound(TEXT("sun.wav"),NULL,SND_ASYNC|SND_FILENAME|SND_LOOP);
         }
         if(Rain && !night)
@@ -4022,6 +4435,21 @@ void keyboard(unsigned char key, int x, int y)
             building1Box3[0] = 30;
             building1Box3[1] = 186;
             building1Box3[2] = 79;
+            firstBuildingWindowColor[0] = 0;
+            firstBuildingWindowColor[1] = 0;
+            firstBuildingWindowColor[2] = 0;
+
+            secondBuildingWindowColor[0] = 0;
+            secondBuildingWindowColor[1] = 0;
+            secondBuildingWindowColor[2] = 0;
+
+            thirdBuildingWindowColor[0] = 0;
+            thirdBuildingWindowColor[1] = 0;
+            thirdBuildingWindowColor[2] = 0;
+
+            forthBuildingWindowColor[0] = 0;
+            forthBuildingWindowColor[1] = 0;
+            forthBuildingWindowColor[2] = 0;
             PlaySound(TEXT("rain.wav"),NULL,SND_ASYNC|SND_FILENAME|SND_LOOP);
         }
         break;
@@ -4049,6 +4477,11 @@ int main(int argc, char** argv)
     glutTimerFunc(25, flyAnimation, 0); //Add a timer
     glutTimerFunc(25, shipAnimation, 0);
     glutTimerFunc(25, shipAnimation2, 0);
+    glutTimerFunc(25,fish1Animation,0);
+    glutTimerFunc(25,fish2Animation,0);
+    glutTimerFunc(25,fish3Animation,0);
+    glutTimerFunc(25,fish4Animation,0);
+    glutTimerFunc(25,fish5Animation,0);
     glutTimerFunc(25, rainAnimation, 0);
     glutKeyboardFunc(keyboard);
     glutMainLoop();
