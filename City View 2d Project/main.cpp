@@ -10,6 +10,7 @@
 #define CTRL_COUNT 100
 
 bool nightLight;
+bool sunrise=false;
 int firstBuildingWindowColor[3]={0,0,0};
 int secondBuildingWindowColor[3]={0,0,0};
 int thirdBuildingWindowColor[3]={0,0,0};
@@ -30,6 +31,7 @@ bool VelocityUp=false;
 bool freeze=false;
 double SpeedUp;
 double tree[3] = {34, 139, 34};
+bool NightRain=false;
 
 void drawCredle(){
     //1st pillar
@@ -60,7 +62,7 @@ void drawCredle(){
     glEnd();
 
     //left square 1
-    glColor3ub(217, 180, 143);
+    glColor3ub(255, 0, 255);
     glBegin(GL_QUADS);
     glVertex3f(4.2, 0.8, 0.0);
     glVertex3f(4.23, 0.8, 0.0);
@@ -69,7 +71,7 @@ void drawCredle(){
     glEnd();
 
     //left square 2
-    glColor3ub(217, 180, 143);
+     glColor3ub(255, 0, 255);
     glBegin(GL_QUADS);
     glVertex3f(4.35, 0.8, 0.0);
     glVertex3f(4.38, 0.8, 0.0);
@@ -78,7 +80,7 @@ void drawCredle(){
     glEnd();
 
     //right square 1
-    glColor3ub(238, 178, 56);
+    glColor3ub(255, 0, 255);
     glBegin(GL_QUADS);
     glVertex3f(4.77, 0.8, 0.0);
     glVertex3f(4.8, 0.8, 0.0);
@@ -88,7 +90,7 @@ void drawCredle(){
 
     //right square 2
 
-    glColor3ub(238, 178, 56);
+    glColor3ub(255, 0, 255);
     glBegin(GL_QUADS);
     glVertex3f(4.65, 0.8, 0.0);
     glVertex3f(4.68, 0.8, 0.0);
@@ -369,6 +371,7 @@ double car1 = 0;
 double car2 = 0;
 double car3=0;
 double car4=0;
+double carex=0;
 double fly = 0;
 double ship = -13;
 double ship2 = 0;
@@ -419,8 +422,9 @@ GLuint LoadTexture(const char * filename)
 
     return texture;
 }
-// **********arshad
-    float a=0.0,b=0.0,y=0.0;
+
+
+float a=0.0,b=0.0,y=0.0;
 
 void drawfish2()
 {
@@ -1136,48 +1140,17 @@ void bezierCoefficients(int n,int *c)
 
 }
 
-void drawCurve()
-{
-    glPushMatrix();
-    int cp[4][2]= {{10,10},{100,200},{200,50},{300,300}};
-    int c[4],k,n=3;
-    float x,y,u,blend;
-
-    bezierCoefficients(n,c);
-
-    glColor3f(1.0,0.0,0.0);
-    glLineWidth(20.0);
-    glBegin(GL_LINE_STRIP);
-    for(u=0; u<1.0; u+=0.01)
-    {
-        x=0;
-        y=0;
-        for(k=0; k<4; k++)
-        {
-            blend=c[k]*pow(u,k)*pow(1-u,n-k);
-            x+=cp[k][0]*blend;
-            y+=cp[k][1]*blend;
-        }
-        glVertex2f(x,y);
-
-
-    }
-
-    glEnd();
-    glPopMatrix();
-}
-
 void drawBoat()
 {
     //glScaled(20,20,0);
-    glColor3f(0,0,0);
+    glColor3f(255,0,0);
     glBegin(GL_POLYGON);
     glVertex2f(3.5,5.5);
     glVertex2f(3.5,8.5);
     glVertex2f(19.5,8.5);
     glVertex2f(19.5,5.5);
     glEnd();
-    glColor3f(0.0,0.0,0.0);
+    glColor3f(0.0,0.0,1.0);
     glBegin(GL_POLYGON);
     glVertex2f(1,5.5);
     glVertex2f(4,1);
@@ -1686,6 +1659,7 @@ void drawRailTrack()
 void drawRoad()
 {
 
+
     double x=0, y=0;
 
     // white box for 1st
@@ -1759,8 +1733,10 @@ void drawRoad()
     glEnd();
 
 
+
+
+
 }
-//////////////*******************arshad
 void wheel(float k,float m,float rad)
 {
     glBegin(GL_POLYGON);
@@ -1813,7 +1789,17 @@ void drawNewCar4(){
     wheel(-1.8,-1.7,0.5);
     wheel(-3.8,-1.7,0.5);
     wheel(-8.5,-1.7,0.5);
-
+       //head;ight
+       if(nightLight==true)
+{
+          glBegin(GL_POLYGON);
+        glColor3ub(192, 192, 192);
+        glVertex3f(2.9, -.1, 0.0);
+       glVertex3f(2.9, -1.9, 0.0);
+       glVertex3f(-.5, -1.3, 0.0);
+       glVertex3f(-.5,-1.1, 0.0);
+        glEnd();
+    }
     //body
     glBegin(GL_POLYGON);
     glColor3f(1.0,0.0,0.0);
@@ -1909,6 +1895,18 @@ void drawNewCar3(){
     wheel(-1.8,-1.7,0.5);
     wheel(-3.8,-1.7,0.5);
     wheel(-8.5,-1.7,0.5);
+
+    //head light
+if(nightLight==true){
+        glBegin(GL_POLYGON);
+        glColor3ub(192, 192, 192);
+
+        glVertex3f(2.9, -.1, 0.0);
+        glVertex3f(2.9, -1.9, 0.0);
+        glVertex3f(-.5, -1.1, 0.0);
+       glVertex3f(-.5,-.7, 0.0);
+        glEnd();
+}
 
     //body
     glBegin(GL_POLYGON);
@@ -2006,15 +2004,19 @@ void drawNewCar3(){
 
 
 
+
+
 void drawNewCar2(){
 //
     wheel(3.4,-1.8,.175);
     wheel(4.2,-1.8,0.175);
+//headlight
 
-    glPushMatrix();
+
+
     //glTranslatef(positionBus,0.0, 0.0f);
     glBegin(GL_QUADS);
-    glColor3f(0.6f, 0.8f, 1.0f);
+    glColor3f(.6f, 0.8f, 1.0f);
     glVertex2f(4.0f,-1.6f);
     glVertex2f(4.5f,-1.6f);
     glVertex2f(4.5f,-1.2f);
@@ -2037,7 +2039,16 @@ void drawNewCar2(){
     glVertex2f(3.2f,-1.2f);
     glEnd();
 
-
+//headlight
+if(nightLight==true){
+    glBegin(GL_POLYGON);
+    glColor3ub(192, 192, 192);
+    glVertex2f(3.0f,-1.7f);
+    glVertex2f(2.5f,-1.9f);
+    glVertex2f(2.5f,-1.4f);
+    glVertex2f(3.0f,-1.6f);
+    glEnd();
+}
     glBegin(GL_QUADS);
     glColor3ub(0, 0, 255);
     glVertex2f(3.0f,-1.8f);
@@ -2084,6 +2095,16 @@ void drawNewCar2(){
     glEnd();
 
 ////
+
+
+          glBegin(GL_POLYGON);
+        glColor3ub(255, 255, 0);
+        glVertex2f(3.3f,-1.3f);
+        glVertex2f(3.3f,-1.2f);
+        glVertex2f(3.9f,-1.2f);
+        glVertex2f(3.9f,-1.3f);
+
+        glEnd();
 
     glBegin(GL_QUADS);
     glVertex2f(3.3f,-1.3f);
@@ -2138,7 +2159,7 @@ void drawNewCar2(){
     glVertex2f(3.3f,-1.4f);
     glVertex2f(3.1f,-1.4f);
     glEnd();
-
+/*
    ///wheel
     glColor3f(0,0,0);
     GLfloat xbpr=3.4f; GLfloat ybpr=-1.8f,radbw=.13,radiw=.09;
@@ -2200,7 +2221,7 @@ void drawNewCar2(){
 	glPopMatrix();
 
 
-
+*/
 
 
 }
@@ -2209,6 +2230,81 @@ void drawNewCar(){
     wheel(.1,-.52,.1655);
     wheel(-.4,-.52,0.165);
     // wheel(-8.5,-1.7,0.2);
+
+
+  if(nightLight==true){
+   //headlight
+    glBegin(GL_POLYGON);
+        glColor3ub(192, 192, 192);
+        glVertex2f(.3f,-0.45f);
+        glVertex2f(.8f,-.6f);
+        glVertex2f(.8f,-0.1f);
+        glVertex2f(.3f,-0.3f);
+
+        glEnd();
+  }
+    glBegin(GL_QUADS);
+{
+    glColor3f(1.0f,0.0f,0.0f); //red
+    glVertex2f(0.3f,-.2f);
+    glVertex2f(0.3f,-0.5f);
+    glVertex2f(-0.6f,-0.5f);
+    glVertex2f(-0.6f,-.2f);
+    glEnd();
+}
+glBegin(GL_LINE_LOOP);
+{
+    glColor3f(0.0f,0.0f,0.0f); ///black border around glasses
+    glVertex2f(0.0f,0.02f);
+    glVertex2f(-0.35f,0.02f);
+    glVertex2f(-0.35f,-0.2f);
+    glVertex2f(0.0f,-0.2f);
+    glEnd();
+}
+glBegin(GL_LINE_LOOP);
+{
+    glColor3f(0.0f,0.0f,0.0f); ///black border around glasses
+    glVertex2f(0.15f,-0.2f);
+    glVertex2f(0.0f,0.02f);
+    glVertex2f(-0.35f,0.02f);
+    glVertex2f(-0.45f,-0.2f);
+    glEnd();
+}
+glBegin(GL_QUADS);
+{
+    glColor3f(0.6f, 0.8f, 1.0f); ///blue glass    (1/255)*X  {if its 153 then (1/255)*153}
+    glVertex2f(0.15f,-0.2f);
+    glVertex2f(0.0f,0.02f);
+    glVertex2f(-0.35f,0.02f);
+    glVertex2f(-0.45f,-0.2f);
+    glEnd();
+}
+glLineWidth(1.2);
+
+
+
+
+}
+
+void drawNewCarEx(){
+
+    wheel(.1,-.52,.1655);
+    wheel(-.4,-.52,0.165);
+    // wheel(-8.5,-1.7,0.2);
+    //headlight
+   if(nightLight==true){
+
+     glBegin(GL_POLYGON);
+
+    glColor3ub(192, 192, 192);
+    glVertex2f(-0.6f,-0.4f);
+    glVertex2f(-0.6f,-.3f);
+    glVertex2f(-1.1f,-.1f);
+    glVertex2f(-1.1f,-.6f);
+
+    glEnd();
+ }
+
     glBegin(GL_QUADS);
 {
     glColor3f(1.0f,0.0f,0.0f); //red
@@ -2247,130 +2343,39 @@ glBegin(GL_LINE_LOOP);
 }
 glLineWidth(1.2);
 
-
-
-    glColor3f(0.0f,0.0f,0.0f);
-    int ib;
-    GLfloat xb=0.05f; GLfloat yb=-.5f; GLfloat radiusb =.12f;
-	int triangleAmountb = 20;
-	GLfloat twicePib = 2.0f * PI;
-    glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(xb, yb);
-		for(ib = 0; ib <= triangleAmountb;ib++)
-            {
-			glVertex2f(
-                xb + (radiusb * cos(ib *  twicePib / triangleAmountb)),
-			    yb + (radiusb * sin(ib * twicePib / triangleAmountb))
-			          );
-            }
-	glEnd();
-
-
-	glColor3f(0.0f,0.0f,0.0f);
-    int jb;
-    GLfloat pb=-0.35f; GLfloat qb=-0.5f; GLfloat radb =.12f;
-	int triangleAmtb = 20;
-	GLfloat twicepib = 2.0f * PI;
-    glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(pb, qb);
-		for(jb = 0; jb <= triangleAmtb;jb++)
-            {
-			glVertex2f(
-                pb + (radb * cos(jb *  twicepib / triangleAmtb)),
-			    qb + (radb * sin(jb * twicepib / triangleAmtb))
-			          );
-            }
-	glEnd();
-
-    glColor3f(1.0f,1.0f,1.0f);
-
-    GLfloat radi =.09f;
-
-    glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(xb, yb);
-		for(ib = 0; ib <= triangleAmountb;ib++)
-            {
-			glVertex2f(
-                xb + (radi * cos(ib *  twicePib / triangleAmountb)),
-			    yb + (radi * sin(ib * twicePib / triangleAmountb))
-			          );
-            }
-	glEnd();
-
-
-
-   glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(pb, qb);
-		for(jb = 0; jb <= triangleAmtb;jb++)
-            {
-			glVertex2f(
-                pb + (radi * cos(jb *  twicepib / triangleAmtb)),
-			    qb + (radi * sin(jb * twicepib / triangleAmtb))
-			          );
-            }
-	glEnd();
-
-//glPopMatrix();
-
-}
-
-void drawCar()
+ glBegin(GL_QUADS);
 {
-
-    wheel(-5.1,-1.5,0.3);
-    wheel(-3.8,-1.5,0.3);
-
-    //body
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-5.5, -1.45, 0.0);
-    glVertex3f(-3.4, -1.45, 0.0);
-    glVertex3f(-3.4,-1.05, 0.0);
-    glVertex3f(-5.5, -1.05, 0.0);
-    glEnd();
-
-    //window 1
-    glBegin(GL_POLYGON);
-    glColor3f(0,0,0);
-    glVertex3f(-4.90,-1.0,0.0);
-    glVertex3f(-4.55,-1.0,0.0);
-    glVertex3f(-4.55,-0.75,0.0);
-    glVertex3f(-4.90,-0.75,0.0);
-    glEnd();
-
-    //window 2
-    glBegin(GL_POLYGON);
-    glColor3f(0,0,0);
-    glVertex3f(-4.45,-1.0,0.0);
-    glVertex3f(-4.1,-1.0,0.0);
-    glVertex3f(-4.1,-0.75,0.0);
-    glVertex3f(-4.45,-0.75,0.0);
-    glEnd();
-
-    //hood
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.98,-1.05,0.0);
-    glVertex3f(-4.0,-1.05,0.0);
-    glVertex3f(-4.0,-0.69,0.0);
-    glVertex3f(-4.98,-0.69,0.0);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.0,-1.05,0.0);
-    glVertex3f(-4.0,-0.69,0.0);
-    glVertex3f(-3.6,-1.05,0.0);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.98,-1.05,0.0);
-    glVertex3f(-4.98,-0.69,0.0);
-    glVertex3f(-5.4,-1.05,0.0);
+    glColor3f(0.6f, 0.8f, 1.0f); ///blue glass    (1/255)*X  {if its 153 then (1/255)*153}
+    glVertex2f(0.15f,-0.2f);
+    glVertex2f(0.0f,0.02f);
+    glVertex2f(-0.35f,0.02f);
+    glVertex2f(-0.45f,-0.2f);
     glEnd();
 }
+}
 
+
+void drawSt(){
+
+glBegin(GL_TRIANGLES);
+
+    glColor3f(255,223,0);
+    glVertex2f(0.13f,-0.2f);
+    glVertex2f(0.47f,-0.2f);
+    glVertex2f(0.30f,0.0f);
+    //glVertex2f(-0.45f,-0.2f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+
+   glColor3f(255,223,0);
+    glVertex2f(0.13f,-0.1f);
+    glVertex2f(0.47f,-0.1f);
+    glVertex2f(0.30f,-0.3f);
+    //glVertex2f(-0.45f,-0.2f);
+    glEnd();
+
+}
     double setUpSpeed(double z){
 
     if(freeze==true){
@@ -2971,7 +2976,7 @@ void firstBackGroundHouse()
 void SecondBackgoundHouse()
 {
     // triangle
-    glColor3ub(103, 64, 59);
+    glColor3ub(secondBuildingWindowColor[0], secondBuildingWindowColor[1], secondBuildingWindowColor[2]);
     glBegin(GL_TRIANGLES);
     glVertex3f(-2.1, 1.5, 0.0);
     glVertex3f(-0.9, 1.5, 0.0);
@@ -3197,7 +3202,7 @@ void ForthBackgroundHouse()
 
     //Bar 1
 
-    glColor3ub(76, 76, 76);
+    glColor3ub(255,0,0);
     glBegin(GL_POLYGON);
     glVertex3f(2.0, 1.5, 0.0);
     glVertex3f(3.2, 1.5, 0.0);
@@ -3206,7 +3211,7 @@ void ForthBackgroundHouse()
     glEnd();
 
 
-    glColor3ub(76, 76, 76);
+     glColor3ub(255,0,0);
     glBegin(GL_POLYGON);
     glVertex3f(3.2, 1.5, 0.0);
     glVertex3f(3.35, 1.5, 0.0);
@@ -3216,7 +3221,7 @@ void ForthBackgroundHouse()
 
     // bar 2
 
-    glColor3ub(76, 76, 76);
+     glColor3ub(255,0,0);
     glBegin(GL_POLYGON);
     glVertex3f(2.0, 1.2, 0.0);
     glVertex3f(3.2, 1.2, 0.0);
@@ -3225,7 +3230,7 @@ void ForthBackgroundHouse()
     glEnd();
 
 
-    glColor3ub(76, 76, 76);
+    glColor3ub(255,0,0);
     glBegin(GL_POLYGON);
     glVertex3f(3.2, 1.2, 0.0);
     glVertex3f(3.35, 1.2, 0.0);
@@ -3235,7 +3240,7 @@ void ForthBackgroundHouse()
 
     // bar 3
 
-    glColor3ub(76, 76, 76);
+    glColor3ub(255,0,0);
     glBegin(GL_POLYGON);
     glVertex3f(2.0, 0.9, 0.0);
     glVertex3f(3.2, 0.9, 0.0);
@@ -3244,7 +3249,7 @@ void ForthBackgroundHouse()
     glEnd();
 
 
-    glColor3ub(76, 76, 76);
+    glColor3ub(255,0,0);
     glBegin(GL_POLYGON);
     glVertex3f(3.2, 0.9, 0.0);
     glVertex3f(3.35, 0.9, 0.0);
@@ -3321,7 +3326,10 @@ void drawScene()
     glTranslatef(0.0, 0.0, -7.0); //Move forward 5 units
 
     //dolna
+    glPushMatrix();
+    glTranslatef(-4.85,0,0);
     drawCredle();
+    glPopMatrix();
     //tree
     glPushMatrix();
     glScalef(0.7,0.7,1);
@@ -3340,7 +3348,7 @@ void drawScene()
     //tree
     glPushMatrix();
     glScalef(0.7,0.7,1);
-    glTranslatef(-0.3,1.4,0);
+    glTranslatef(6.5,1.4,0);
     drawTree();
     glPopMatrix();
 
@@ -3367,18 +3375,23 @@ void drawScene()
     glPopMatrix();
 
     //drawLight();
-    if(nightLight){
-            nightLightFun();
 
-    }
     // Build Home In the Sky
 
     //house 1
     BackgroundHouse();
     //road
     glPushMatrix();
-    drawLight();
+
     drawRoad();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0,0.18,2);
+    drawLight();
+    if(nightLight==true){
+    nightLightFun();
+    }
     glPopMatrix();
 
     //Sky
@@ -3394,6 +3407,15 @@ void drawScene()
     glEnd();
     glPopMatrix();
 
+     //SUN
+
+    glPushMatrix();
+    glTranslatef(0,-_angle,0);
+    glTranslatef(4,3,0);
+    glScalef(1,1,0.1);
+    glColor3ub(sun[0], sun[1], sun[2]);
+    glutSolidSphere(0.4,40,40);
+    glPopMatrix();
 
     //Ground
     glPushMatrix(); // Soil and train track color and shape
@@ -3408,14 +3430,7 @@ void drawScene()
     glEnd();
     glPopMatrix();
 
-    //SUN
-    glPushMatrix();
-    glTranslatef(0,-_angle,0);
-    glTranslatef(4,3,0);
-    glScalef(1,1,0.1);
-    glColor3ub(sun[0], sun[1], sun[2]);
-    glutSolidSphere(0.4,40,40);
-    glPopMatrix();
+
 
 
     glPushMatrix();
@@ -3486,12 +3501,11 @@ void drawScene()
     glPopMatrix();
 //end
 
-////////////////arshad
     //ship 1
     glPushMatrix();
     glTranslatef(ship,0,0);
     glTranslatef(1,-1.5,2);
-    glScalef(0.13,0.04,1);
+    glScalef(0.10,0.03,1);
     drawBoat();
     glPopMatrix();
 
@@ -3612,7 +3626,7 @@ void drawScene()
     glPushMatrix();
     glTranslatef(ship2,0.2,0);
     glTranslatef(5,-1.5,2);
-    glScalef(0.13,0.04,1);
+    glScalef(0.10,0.03,1);
     drawBoat();
     glPopMatrix();
     //*******************end
@@ -3672,25 +3686,26 @@ void drawScene()
 
 
 
+    //car 0
     glPushMatrix();
-    glTranslatef(-car3,1,0);
+    glTranslatef(-carex,1,0);
     glTranslatef(4,-1.45,1);
     glScalef(.8,.4,0.2);
-    drawNewCar();
+    drawNewCarEx();
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-car3,1,0);
+    glTranslatef(-carex,1,0);
     glTranslatef(8,-1.3,1);
     glScalef(.8,.4,0.2);
-    drawNewCar();
+    drawNewCarEx();
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-car3,1,0);
+    glTranslatef(-carex,1,0);
     glTranslatef(13,-1.3,1);
     glScalef(.8,.4,0.2);
-    drawNewCar();
+    drawNewCarEx();
     glPopMatrix();
 
     glPushMatrix();
@@ -3717,7 +3732,6 @@ void drawScene()
 
     ////////////...............
 //// car2 display
-
     glPushMatrix();
     glTranslatef(-car2,0,0);
     glTranslatef(7,0.1,3);
@@ -3739,6 +3753,7 @@ void drawScene()
     glTranslatef(car4,0.7,0);
     glTranslatef(-4,-.6,1);
     glScalef(0.15,0.15,1);
+
     drawNewCar3();
     glPopMatrix();
 
@@ -3752,7 +3767,88 @@ void drawScene()
     glScalef(0.15,0.15,1);
     drawNewCar4();
     glPopMatrix();
+//starts
+if(NightRain==false){
+    if(nightLight==true){
+    glPushMatrix();
+    glTranslatef(4.5,2.2,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
 
+    glPushMatrix();
+    glTranslatef(5.0,2.4,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(1.6,2.4,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(2.4,2.2,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+ glPushMatrix();
+    glTranslatef(2.8,2.6,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+ glPushMatrix();
+    glTranslatef(0.8,2.8,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+ glPushMatrix();
+    glTranslatef(-4.0,2.6,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+     glPushMatrix();
+    glTranslatef(-2.9,2.6,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-1.9,2.6,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-2.4,2.1,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-1.2,2.1,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-0.2,2.6,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.2,2.1,0);
+     glScalef(.5,.5,0);
+    drawStars();
+    glPopMatrix();
+    }
+}
 //////////////end
 
     //helicopter
@@ -3800,7 +3896,7 @@ void drawScene()
     glPushMatrix();
     glTranslatef(ship, 0, 0);
     glTranslatef(0, 2, 0);
-
+if(night!=true){
     //draw Bird
     glPushMatrix();
     glScalef(3, 1, 1);
@@ -3868,7 +3964,7 @@ void drawScene()
     glScalef(0.05, 0.05, 1);
     //drawBird2();
     glPopMatrix();
-
+}
     glPopMatrix();
 
     glutSwapBuffers();
@@ -3878,9 +3974,23 @@ void drawScene()
 void update(int value)
 {
 
-if(freeze==true){
+    if(freeze==true){
     _angle+=0.0f;
-}
+    }
+    else if(sunrise==true){
+
+    if(VelocityUp==true){
+    _angle-=0.01f;
+   }
+    else{
+         _angle-=0.001f;
+    }
+
+    if(_angle<0.0f){
+
+       sunrise=false;
+    }
+ }
 else if(VelocityUp==false){
     _angle+=0.001f;
 
@@ -3890,9 +4000,13 @@ else if(VelocityUp==true){
 }
 
 
- if(_angle>3.0f){
-    _angle=0.0f;
+
+ if(_angle>2.27f){
+    sunrise=true;
+
+
  }
+
 
 
     glutPostRedisplay(); //Tell GLUT that the display has changed
@@ -4013,7 +4127,36 @@ void carAnimation1(int value)
 
     glutTimerFunc(25, carAnimation1, 0);
 }
+void carAnimation(int value)
+{
 
+     double z=setUpSpeed(0.03f);
+    car1 += z;
+    //car1 += 0.03f;
+    if(car1>19.0f)
+    {
+        car1 = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, carAnimation1, 0);
+}
+void carAnimationex(int value)
+{
+
+     double z=setUpSpeed(0.03f);
+    carex += z;
+    //car1 += 0.03f;
+    if(carex>19.0f)
+    {
+        carex = -5.0f;
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(25, carAnimationex, 0);
+}
 
 void carAnimation3(int value)
 {
@@ -4109,31 +4252,13 @@ void shipAnimation2(int value)
     if(ship2 <= -13)
     {
         ship2=0;
-       // ship=ship+.005;
-      //  return;
+
     }
-  //  else if(ship2>=3)
-    //    {
-      //      ship2=ship2-.005;
-       // }
+
 
        double z= setUpSpeed(0.005f);
        ship2-=z;
-  /*
-    if(VelocityUp==true)
-    {
 
-    ship2-= 0.2f;
-
-    }
-
-    else
-    {
-        ship2 -= 0.005f;
-         cout<<"ship 2 false"<<endl;
-
-    }
-*/
     glutPostRedisplay();
 
     glutTimerFunc(25, shipAnimation2, 0);
@@ -4178,6 +4303,7 @@ void keyboard(unsigned char key, int x, int y)
 
     case 'r':
         nightLight = false;
+        NightRain=true;
         Rain = true;
         if(!night)
         {
@@ -4204,6 +4330,7 @@ void keyboard(unsigned char key, int x, int y)
 
     case 's':
         Rain = false;
+        NightRain=false;
         if(!night)
         {
             sky[0] = 19;
@@ -4257,6 +4384,7 @@ void keyboard(unsigned char key, int x, int y)
 
         if(night && !Rain)
         {
+            NightRain=false;
             sky[0] = 77;
             sky[1] = 77;
             sky[2] = 77;
@@ -4281,9 +4409,10 @@ void keyboard(unsigned char key, int x, int y)
             water[0] = 68;
             water[1] = 142;
             water[2] = 201;
-            firstBuildingWindowColor[0] = 255;
-            firstBuildingWindowColor[1] = 255;
-            firstBuildingWindowColor[2] = 153;
+
+            firstBuildingWindowColor[0] = 0;
+            firstBuildingWindowColor[1] = 0;
+            firstBuildingWindowColor[2] = 255;
 
             secondBuildingWindowColor[0] = 153;
             secondBuildingWindowColor[1] = 255;
@@ -4326,9 +4455,9 @@ void keyboard(unsigned char key, int x, int y)
             water[0] = 68;
             water[1] = 142;
             water[2] = 201;
-            firstBuildingWindowColor[0] = 255;
-            firstBuildingWindowColor[1] = 255;
-            firstBuildingWindowColor[2] = 153;
+            firstBuildingWindowColor[0] = 204;
+            firstBuildingWindowColor[1] = 204;
+            firstBuildingWindowColor[2] = 0;
 
             secondBuildingWindowColor[0] = 153;
             secondBuildingWindowColor[1] = 255;
@@ -4475,6 +4604,7 @@ int main(int argc, char** argv)
     glutTimerFunc(25, carAnimation3, 0);//new_a
     glutTimerFunc(25,newcarAnimation3,0);//new_a
     glutTimerFunc(25, flyAnimation, 0); //Add a timer
+    glutTimerFunc(25, carAnimationex, 0);
     glutTimerFunc(25, shipAnimation, 0);
     glutTimerFunc(25, shipAnimation2, 0);
     glutTimerFunc(25,fish1Animation,0);
