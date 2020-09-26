@@ -422,9 +422,7 @@ GLuint LoadTexture(const char * filename)
 
     return texture;
 }
-
-
-float a=0.0,b=0.0,y=0.0;
+    float a=0.0,b=0.0,y=0.0;
 
 void drawfish2()
 {
@@ -2355,7 +2353,7 @@ glLineWidth(1.2);
 }
 
 
-void drawSt(){
+void drawStars(){
 
 glBegin(GL_TRIANGLES);
 
@@ -2834,7 +2832,6 @@ void handleResize(int w, int h)
 }
 
 
-// Write by Gourango
 
 void firstBackGroundHouse()
 {
@@ -4029,7 +4026,6 @@ void trainAnimation(int value)
 
     glutTimerFunc(25, trainAnimation, 0);
 }
-//////////////arshad
 
 void fish1Animation(int value){
 
@@ -4228,7 +4224,6 @@ void flyAnimation(int value)
 
     glutTimerFunc(25, flyAnimation, 0);
 }
-/////////arshad
 void shipAnimation(int value)
 {
  double z= setUpSpeed(0.01f);
@@ -4284,7 +4279,6 @@ void keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
-        // arshad**
     case 'v':
         VelocityUp= true;
 
