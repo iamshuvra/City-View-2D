@@ -1869,21 +1869,6 @@ void drawNewCar4(){
     glEnd();
 
 
-/*
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.0,-1.05,0.0);
-    glVertex3f(-4.0,-0.69,0.0);
-    glVertex3f(-3.6,-1.05,0.0);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
-    glVertex3f(-4.98,-1.05,0.0);
-    glVertex3f(-4.98,-0.69,0.0);
-    glVertex3f(-5.4,-1.05,0.0);
-    glEnd();
-*/
 }
 
 
@@ -1936,16 +1921,7 @@ if(nightLight==true){
 
     glEnd();
 
- /*   //tringle
-     glBegin(GL_TRIANGLES);
-    glColor3f(1,1,1);
-    glVertex3f(-3.1,.9,0.0);
-    glVertex3f(-3.1,-0.85,0.0);
-    glVertex3f(-0.5,-.85,0.0);
-   // glVertex3f(-3.15,-0.85,0.0);
 
-    glEnd();
-*/
     //window 1
     glBegin(GL_POLYGON);
     glColor3f(0.6f, 0.8f, 1.0f);
@@ -2157,69 +2133,6 @@ if(nightLight==true){
     glVertex2f(3.3f,-1.4f);
     glVertex2f(3.1f,-1.4f);
     glEnd();
-/*
-   ///wheel
-    glColor3f(0,0,0);
-    GLfloat xbpr=3.4f; GLfloat ybpr=-1.8f,radbw=.13,radiw=.09;
-
-        glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(xbpr, ybpr);
-		for(ib = 0; ib <= triangleAmountb;ib++)
-            {
-			glVertex2f(
-                xbpr + (radbw * cos(ib *  twicePib / triangleAmountb)),
-			    ybpr + (radbw * sin(ib * twicePib / triangleAmountb))
-			          );
-            }
-	glEnd();
-
-	glColor3f(0,0,0);
-
-    GLfloat pbpt=4.2f; GLfloat qbpt=-1.8f;
-    GLfloat radb =.12f;
-	int triangleAmtb = 20;
-	GLfloat twicepib = 2.0f * PI;
-    int jb;
-    glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(pbpt, qbpt);
-		for(jb = 0; jb <= triangleAmtb;jb++)
-            {
-			glVertex2f(
-                pbpt + (radbw * cos(jb *  twicepib / triangleAmtb)),
-			    qbpt + (radbw * sin(jb * twicepib / triangleAmtb))
-			          );
-            }
-	glEnd();
-
-	glColor3f(1,1,1);
-
-
-   glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(xbpr, ybpr);
-		for(ib = 0; ib <= triangleAmountb;ib++)
-            {
-			glVertex2f(
-                xbpr + (radiw * cos(ib *  twicePib / triangleAmountb)),
-			    ybpr + (radiw * sin(ib * twicePib / triangleAmountb))
-			          );
-            }
-	glEnd();
-
-
-        glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(pbpt, qbpt);
-		for(jb = 0; jb <= triangleAmtb;jb++)
-            {
-			glVertex2f(
-                pbpt + (radiw * cos(jb *  twicepib / triangleAmtb)),
-			    qbpt + (radiw * sin(jb * twicepib / triangleAmtb))
-			          );
-            }
-	glEnd();
-	glPopMatrix();
-
-
-*/
 
 
 }
